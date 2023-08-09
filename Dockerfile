@@ -1,12 +1,11 @@
-FROM python:3.10.11
+FROM python:3.10
 
-LABEL description ="crawling and upload to elastic cloud"
+WORKDIR /code
 
-#open할 port
-EXPOSE 80
-EXPOSE 433
+COPY requirements.txt .
 
-RUN mkdir -p /crawling
-WORKDIR /crawling
-COPY src .
-RUN pip install -r ./requirements.txt
+RUN pip install -r requirements.txt
+
+COPY src/ .
+
+CMD ["python", "./Crawler.py"]
