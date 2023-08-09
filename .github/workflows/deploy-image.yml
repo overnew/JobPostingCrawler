@@ -26,15 +26,15 @@ jobs:
     - name: List files
       run: ls -al
 
-    - name: Deploying application to Amazon S3
-      uses: dvelasquez/deploy-s3-action@main
-      with:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'ap-northeast-2'
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          BUCKET_PATH: "" # Or to upload a pull_request: "/pr/${{github.event.number}}"
-          DIST_LOCATION_CODE: '/home/runner/work/JobPostingCrawler/JobPostingCrawler/myimage.tar'
+    - name: Upload AWS s3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_EC2_METADATA_DISABLED: true
+      run:
+        aws s3 cp --recursive --region ap-northeast-2 dist s3://001-docker-images
+
+
 
 #    - name: Push build to S3
 #      uses: sai-sharan/aws-s3-sync-action@master
