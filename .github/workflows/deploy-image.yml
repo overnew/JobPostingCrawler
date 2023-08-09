@@ -19,7 +19,12 @@ jobs:
       with:
         #context: .
         tags: myimage:latest
-        outputs: type=docker,dest=myimage.tar
+        outputs: type=docker,dest=/github/workspace/myimage.tar
+
+    - name: Print working directory
+      run: pwd
+    - name: List files
+      run: ls -al
 
     - name: Deploying application to Amazon S3
       uses: dvelasquez/deploy-s3-action@main
@@ -29,7 +34,7 @@ jobs:
           AWS_DEFAULT_REGION: ap-northeast-2
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           BUCKET_PATH: "" # Or to upload a pull_request: "/pr/${{github.event.number}}"
-          DIST_LOCATION_CODE: myimage.tar
+          DIST_LOCATION_CODE: /github/workspace/myimage.tar
 
 
 #    - name: Push build to S3
