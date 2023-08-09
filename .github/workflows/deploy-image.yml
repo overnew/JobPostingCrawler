@@ -19,7 +19,7 @@ jobs:
       with:
         context: .
         tags: myimage:latest
-        outputs: type=docker,dest=./tmp/myimage.tar
+        outputs: type=docker,dest=/tmp/myimage.tar
 
 
     - name: Deploying application to Amazon S3
@@ -30,7 +30,7 @@ jobs:
           AWS_DEFAULT_REGION: ap-northeast-2
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           BUCKET_PATH: "" # Or to upload a pull_request: "/pr/${{github.event.number}}"
-          DIST_LOCATION_CODE: ./tmp/myimage.tar
+          DIST_LOCATION_CODE: /tmp/myimage.tar
 
 #
 #    - name: zip main.py in src/ to current workspace dir
