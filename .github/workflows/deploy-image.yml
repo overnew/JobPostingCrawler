@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -17,9 +17,9 @@ jobs:
     - name: Build and export
       uses: docker/build-push-action@v4
       with:
-        context: .
+        #context: .
         tags: myimage:latest
-        outputs: type=docker,dest=/tmp/myimage.tar
+        outputs: type=docker,dest=myimage.tar
 
     - name: Push build to S3
       uses: sai-sharan/aws-s3-sync-action@master
@@ -27,7 +27,7 @@ jobs:
         access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: 'ap-northeast-2'
-        source: '/tmp/myimage.tar'
+        source: 'myimage.tar'
         #destination_bucket: ${{ secrets.DESTINATION_BUCKET }}
         #destination_prefix: ${{ secrets.DESTINATION_PREFIX }}
         #exclude: '.git/*'
