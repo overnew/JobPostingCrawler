@@ -19,18 +19,31 @@ jobs:
       with:
         context: .
         tags: myimage:latest
-        outputs: type=docker,dest=./myimage.tar
+        outputs: type=docker,dest=/tmp/myimage.tar
 
-
-    - name: Deploying application to Amazon S3
-      uses: dvelasquez/deploy-s3-action@main
+    - name: Push build to S3
+      uses: sai-sharan/aws-s3-sync-action@master
       with:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ap-northeast-2
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          BUCKET_PATH: "" # Or to upload a pull_request: "/pr/${{github.event.number}}"
-          DIST_LOCATION_CODE: ./myimage.tar
+        access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: 'ap-northeast-2'
+        source: '/tmp/myimage.tar'
+        #destination_bucket: ${{ secrets.DESTINATION_BUCKET }}
+        #destination_prefix: ${{ secrets.DESTINATION_PREFIX }}
+        #exclude: '.git/*'
+        #delete: true
+        #quiet: false
+
+
+#    - name: Deploying application to Amazon S3
+#      uses: dvelasquez/deploy-s3-action@main
+#      with:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          AWS_DEFAULT_REGION: ap-northeast-2
+#          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+#          BUCKET_PATH: "" # Or to upload a pull_request: "/pr/${{github.event.number}}"
+#          DIST_LOCATION_CODE: /tmp/myimage.tar
 
 #
 #    - name: zip main.py in src/ to current workspace dir
