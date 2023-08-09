@@ -21,11 +21,6 @@ jobs:
         tags: myimage:latest
         outputs: type=docker,dest=myimage.tar
 
-    - name: Print working directory
-      run: pwd
-    - name: List files
-      run: ls -al
-
     - name: Upload AWS s3
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
