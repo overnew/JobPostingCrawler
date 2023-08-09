@@ -32,7 +32,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_EC2_METADATA_DISABLED: true
       run:
-        aws s3 cp myimage.tar --region ap-northeast-2 dist s3://001-docker-images
+        aws s3 cp myimage.tar s3://001-docker-images/myimage.tar
 
 
 
