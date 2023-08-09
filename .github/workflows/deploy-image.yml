@@ -31,11 +31,10 @@ jobs:
       with:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ap-northeast-2
+          AWS_DEFAULT_REGION: 'ap-northeast-2'
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           BUCKET_PATH: "" # Or to upload a pull_request: "/pr/${{github.event.number}}"
-          DIST_LOCATION_CODE: myimage.tar
-
+          DIST_LOCATION_CODE: '/home/runner/work/JobPostingCrawler/JobPostingCrawler/myimage.tar'
 
 #    - name: Push build to S3
 #      uses: sai-sharan/aws-s3-sync-action@master
