@@ -22,7 +22,7 @@ jobs:
 #        outputs: type=docker,dest=myimage.tar
 
 
-    - run: docker build --tag my-image:v1 .
+    - run: docker build --tag 001_crawling_images:v1 .
     - name: Push to ECR
       id: ecr
       uses: jwalton/gh-ecr-push@v1
@@ -30,7 +30,7 @@ jobs:
         access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: ap-northeast-2
-        image: my-image:v1
+        image: 001_crawling_images:v1
 
 #
 #    - name: Upload AWS s3
