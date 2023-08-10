@@ -14,20 +14,32 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Build and export
-      uses: docker/build-push-action@v4
-      with:
-        #context: .
-        tags: myimage:latest
-        outputs: type=docker,dest=myimage.tar
+#    - name: Build and export
+#      uses: docker/build-push-action@v4
+#      with:
+#        #context: .
+#        tags: myimage:latest
+#        outputs: type=docker,dest=myimage.tar
 
-    - name: Upload AWS s3
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_EC2_METADATA_DISABLED: true
-      run:
-        aws s3 cp myimage.tar s3://001-docker-images/myimage.tar
+
+    - run: docker build --tag my-image:v1 .
+    - name: Push to ECR
+      id: ecr
+      uses: jwalton/gh-ecr-push@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: ap-northeast-2
+        image: my-image:v1
+
+#
+#    - name: Upload AWS s3
+#      env:
+#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        AWS_EC2_METADATA_DISABLED: true
+#      run:
+#        aws s3 cp myimage.tar s3://001-docker-images/myimage.tar
 
 
 
