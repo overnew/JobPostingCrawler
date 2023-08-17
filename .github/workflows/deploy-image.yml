@@ -17,7 +17,9 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - run: docker build --tag 001_worknet_images:v1 ./worknet
+    - run: docker build --tag ./worknet/001_worknet_images:v1 ./worknet
+    - run: pwd
+    - run: ls -al
     - name: Push to ECR
       env:
         working-directory: ./worknet
@@ -27,7 +29,7 @@ jobs:
         access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: ap-northeast-2
-        local-image: 001_worknet_images:v1
+        local-image: ./worknet/001_worknet_images:v1
         image: 001_worknet_images:v1
 
   build-programmers-image:
@@ -42,7 +44,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - run: docker build --tag 001_programmers_images:v1 ./programmers
+      - run: docker build --tag ./programmers/001_programmers_images:v1 ./programmers
+      - run: pwd
+      - run: ls -al
       - name: Push to ECR
         env:
           working-directory: ./programmers
@@ -52,7 +56,7 @@ jobs:
           access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: ap-northeast-2
-          local-image: 001_programmers_images:v1
+          local-image: ./programmers/001_programmers_images:v1
           image: 001_programmers_images:v1
 
 
