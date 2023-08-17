@@ -5,22 +5,17 @@ on:
       - main
 
 jobs:
-  build-and-push-image:
+  build-worknet-image:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./worknet
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-
-#    - name: Build and export
-#      uses: docker/build-push-action@v4
-#      with:
-#        #context: .
-#        tags: myimage:latest
-#        outputs: type=docker,dest=myimage.tar
-
 
     - run: docker build --tag 001_crawling_images:v1 .
     - name: Push to ECR
@@ -30,9 +25,38 @@ jobs:
         access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: ap-northeast-2
-        image: 001_crawling_images:v1
+        image: 001_worknet_images:v1
 
-#
+  build-programmers-image:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./programmers
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - run: docker build --tag 001_crawling_images:v1 .
+      - name: Push to ECR
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ap-northeast-2
+          image: 001_programmers_images:v1
+
+
+#    - name: Build and export
+#      uses: docker/build-push-action@v4
+#      with:
+#        #context: .
+#        tags: myimage:latest
+#        outputs: type=docker,dest=myimage.tar
+
 #    - name: Upload AWS s3
 #      env:
 #        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
