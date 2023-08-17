@@ -25,13 +25,12 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
-          
+
     - name: send to ECR
       env:
         working-directory: ./worknet
       run : |
-        aws ecr get-login-password --region ap-northeast-2 
-        docker login --username AWS --password-stdin 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com 
+        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com 
         docker tag 001_worknet_images:v1 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_worknet_images:v1 
         docker push 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_worknet_images:v1
 
