@@ -20,10 +20,10 @@ jobs:
     - run: docker build --tag 001_worknet_images:v1 ./worknet
 
     - name: to ECR
-      env:
-        working-directory: ./worknet
-      run : |
-        aws ecr get-login-password --region ap-northeast-2 
+    - env:
+      working-directory: ./worknet
+    - run : |
+        aws ecr get-login-password --region ap-northeast-2
         docker login --username AWS --password-stdin 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com
 #aws ecr get-login*** ap-northeast-2 | docker login --username AWS --password-stdin 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com
         docker tag 001_worknet_images:v1 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_worknet_images:v1
