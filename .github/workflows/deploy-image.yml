@@ -30,9 +30,42 @@ jobs:
       env:
         working-directory: ./worknet
       run : |
-        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com 
-        docker tag 001_worknet_images:v1 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_crawling_images:v1 
-        docker push 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_crawling_images:v1
+        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com 
+        docker tag 001_worknet_images:v1 ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_crawling_images:v1 
+        docker push ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_crawling_images:v1
+
+  build-programmers-image:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./programmers
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - run: docker build --tag 001_programmers_images:v1 ./programmers
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+    - name: send to ECR
+      env:
+        working-directory: ./programmers
+      run : |
+        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com 
+        docker tag 001_programmers_images:v1 ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_programmers_crawling_images:v1 
+        docker push ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_programmers_crawling_images:v1
+
+
+
+
 
 #    - name: Push to ECR
 #      env:
