@@ -19,6 +19,8 @@ jobs:
 
     - run: docker build --tag 001_worknet_images:v1 ./worknet
     - name: Push to ECR
+      env:
+        working-directory: ./worknet
       id: ecr
       uses: jwalton/gh-ecr-push@v1
       with:
@@ -41,6 +43,8 @@ jobs:
 
       - run: docker build --tag 001_programmers_images:v1 ./programmers
       - name: Push to ECR
+        env:
+          working-directory: ./programmers
         id: ecr
         uses: jwalton/gh-ecr-push@v1
         with:
