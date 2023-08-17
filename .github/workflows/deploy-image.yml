@@ -20,47 +20,58 @@ jobs:
     - run: docker build --tag 001_worknet_images:v1 ./worknet
     - run: pwd
     - run: ls -al
-    - run: cd worknet
-    - name: Push to ECR
+
+    - name: to ECR
       env:
         working-directory: ./worknet
-      id: ecr
-      uses: jwalton/gh-ecr-push@v1
-      with:
-        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        region: ap-northeast-2
-        local-image: ./worknet/001_worknet_images:v1
-        image: 001_worknet_images:v1
+      run : |
+        aws ecr get-login-password --region ap-northeast-2 
+        docker login --username AWS --password-stdin 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com
+#aws ecr get-login*** ap-northeast-2 | docker login --username AWS --password-stdin 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com
+        docker tag 001_worknet_images:v1 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_worknet_images:v1
+#629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_crawling_images
+        docker push 629515838455.dkr.ecr.ap-northeast-2.amazonaws.com/001_programmers_images:v1
 
-  build-programmers-image:
-    runs-on: ubuntu-latest
-    env:
-      working-directory: ./programmers
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - run: docker build --tag 001_programmers_images:v1 ./programmers
-
-      - run: cd programmers
-      - run: pwd
-      - run: ls -al
-      - name: Push to ECR
-        env:
-          working-directory: ./programmers
-        id: ecr
-        uses: jwalton/gh-ecr-push@v1
-        with:
-          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: ap-northeast-2
-          local-image: ./programmers/001_programmers_images:v1
-          image: 001_programmers_images:v1
+#    - name: Push to ECR
+#      env:
+#        working-directory: ./worknet
+#      id: ecr
+#      uses: jwalton/gh-ecr-push@v1
+#      with:
+#        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        region: ap-northeast-2
+#        local-image: 001_worknet_images:v1
+#        image: 001_worknet_images:v1
+#
+#  build-programmers-image:
+#    runs-on: ubuntu-latest
+#    env:
+#      working-directory: ./programmers
+#
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      - run: docker build --tag 001_programmers_images:v1 ./programmers
+#
+#      - run: cd programmers
+#      - run: pwd
+#      - run: ls -al
+#      - name: Push to ECR
+#        env:
+#          working-directory: ./programmers
+#        id: ecr
+#        uses: jwalton/gh-ecr-push@v1
+#        with:
+#          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          region: ap-northeast-2
+#          local-image: 001_programmers_images:v1
+#          image: 001_programmers_images:v1
 
 
 #    - name: Build and export
