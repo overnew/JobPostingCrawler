@@ -20,7 +20,7 @@ class ProgrammersCrawler:
     
     def __init__(self):
         #for selenium
-        self.service = Service(executable_path='./usr/src/chrome/chromedriver.exe')
+        #self.service = Service(executable_path='./usr/src/chrome/chromedriver.exe')
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--headless')
         # options.add_argument('window-size=1200x600')
@@ -77,7 +77,7 @@ class ProgrammersCrawler:
             page_idx += 1
             url = prefix_url + str(page_idx)
 
-            browser = webdriver.Chrome(service=self.service,options=self.options)
+            browser = webdriver.Chrome(options=self.options)
             browser.get(url)
 
             titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
@@ -108,7 +108,7 @@ class ProgrammersCrawler:
 
         for i, href in enumerate(page_href_list):
             print(href)
-            browser = webdriver.Chrome(service=self.service,options=self.options)
+            browser = webdriver.Chrome(options=self.options) #service=self.service,
             browser.get(href)
             title = browser.find_element(By.CLASS_NAME, "KWImVsDeFt2E93NXqAqt").find_element(By.TAG_NAME, "h2").text
 
