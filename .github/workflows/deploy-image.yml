@@ -47,6 +47,12 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - run: docker build --tag 001_programmers_images:v1 ./programmers
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
+        ELASTIC_CLOUD_PASSWORD: ${{ secrets.ELASTIC_CLOUD_PASSWORD }}
+
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -62,125 +68,3 @@ jobs:
         aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com 
         docker tag 001_programmers_images:v1 ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_programmers_crawling_images:latest 
         docker push ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_programmers_crawling_images:latest
-
-
-
-
-
-#    - name: Push to ECR
-#      env:
-#        working-directory: ./worknet
-#      id: ecr
-#      uses: jwalton/gh-ecr-push@v1
-#      with:
-#        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        region: ap-northeast-2
-#        local-image: 001_worknet_images:v1
-#        image: 001_worknet_images:v1
-#
-#  build-programmers-image:
-#    runs-on: ubuntu-latest
-#    env:
-#      working-directory: ./programmers
-#
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v2
-#
-#      - run: docker build --tag 001_programmers_images:v1 ./programmers
-#
-#      - run: cd programmers
-#      - run: pwd
-#      - run: ls -al
-#      - name: Push to ECR
-#        env:
-#          working-directory: ./programmers
-#        id: ecr
-#        uses: jwalton/gh-ecr-push@v1
-#        with:
-#          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          region: ap-northeast-2
-#          local-image: 001_programmers_images:v1
-#          image: 001_programmers_images:v1
-
-
-#    - name: Build and export
-#      uses: docker/build-push-action@v4
-#      with:
-#        #context: .
-#        tags: myimage:latest
-#        outputs: type=docker,dest=myimage.tar
-
-#    - name: Upload AWS s3
-#      env:
-#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        AWS_EC2_METADATA_DISABLED: true
-#      run:
-#        aws s3 cp myimage.tar s3://001-docker-images/myimage.tar
-
-
-
-#    - name: Push build to S3
-#      uses: sai-sharan/aws-s3-sync-action@master
-#      with:
-#        access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        region: 'ap-northeast-2'
-#        source: 'myimage.tar'
-#        destination_bucket: ${{ secrets.AWS_BUCKET_NAME }}
-#        #destination_prefix: ${{ secrets.DESTINATION_PREFIX }}
-#        #exclude: '.git/*'
-#        #delete: true
-#        #quiet: false
-
-
-#    - name: Deploying application to Amazon S3
-#      uses: dvelasquez/deploy-s3-action@main
-#      with:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          AWS_DEFAULT_REGION: ap-northeast-2
-#          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-#          BUCKET_PATH: "" # Or to upload a pull_request: "/pr/${{github.event.number}}"
-#          DIST_LOCATION_CODE: /tmp/myimage.tar
-
-#
-#    - name: zip main.py in src/ to current workspace dir
-#      run: |
-#        CURRENT_DIR=$(pwd)
-#        mkdir artifact
-#        cd ./aws-wordpress/3-app-configuration/lambda-jumpbox-uptime/src/
-#        zip "${CURRENT_DIR}/artifact/lambda-jumpbox-uptime.zip" main.py
-#    - name: Custom docker container action to push object to S3
-#      uses: ./.github/actions/push-object-to-s3
-#      with:
-#        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID}}
-#        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }}
-#        aws_region: ap-northeast-2
-#        aws_s3_bucket_name: 001-docker-images
-#        source_file: ./artifact/lambda-jumpbox-uptime.zip
-#        destination_path: /
-#        destination_file_name: lambda-jumpbox-uptime.zip
-
-
-#    - name: Set up Docker Buildx
-#      uses: docker/setup-buildx-action@v1
-#
-#
-#    - name: Build and push
-#      #id: docker_build
-#      run: docker build . --file Dockerfile --tag crawling:0.1
-#
-#    - name: Upload AWS s3
-#      env:
-#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        AWS_EC2_METADATA_DISABLED: true
-#      run:
-#        aws s3 cp --recursive --region ap-northeast-2 dist s3://001-docker-images
