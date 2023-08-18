@@ -64,6 +64,7 @@ class ProgrammersCrawler:
         크롤링 대상 page list 만들기
         :return: 크롤링 대상 page list의 링크
         """
+        print("gogo")
         url = 'https://career.programmers.co.kr/job?page=1'
 
         browser = webdriver.Chrome(service=self.service,options=self.options)
@@ -72,7 +73,7 @@ class ProgrammersCrawler:
 
         titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
         href_list = []
-
+        print("start crawling")
         for i, tit in enumerate(titles):
             # print(tit.text)
             body = tit.find_element(By.TAG_NAME, "a")  # 태그로 가져오기
@@ -80,6 +81,8 @@ class ProgrammersCrawler:
             href_list.append(body.get_attribute("href"))
 
         browser.quit()
+
+        print(href_list)
         return href_list
 
     def crawl_page_content(self, page_href_list: list):
