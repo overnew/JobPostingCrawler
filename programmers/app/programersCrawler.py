@@ -64,25 +64,39 @@ class ProgrammersCrawler:
         크롤링 대상 page list 만들기
         :return: 크롤링 대상 page list의 링크
         """
-        print("gogo")
-        url = 'https://career.programmers.co.kr/job?page=1'
+        prefix_url = 'https://career.programmers.co.kr/job?page='
+        page_idx = 0
+        cnt = 0
+        break_flag = True
 
-        browser = webdriver.Chrome(service=self.service,options=self.options)
-            
-        browser.get(url)
-
-        titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
         href_list = []
-        print("start crawling")
-        for i, tit in enumerate(titles):
-            # print(tit.text)
-            body = tit.find_element(By.TAG_NAME, "a")  # 태그로 가져오기
-            #print(body.get_attribute("href"))
-            href_list.append(body.get_attribute("href"))
+        while break_flag:
+            page_idx += 1
+            url = prefix_url + str(page_idx)
 
-        browser.quit()
+            browser = webdriver.Chrome()
+            browser.get(url)
 
-        print(href_list)
+            titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
+
+            for i, tit in enumerate(titles):
+
+                body = tit.find_element(By.TAG_NAME, "a")  # 태그로 가져오기
+                # print(body.get_attribute("href"))
+                href = body.get_attribute("href")
+                if href in self.check_href_list:
+                    break_flag = False
+                    print(self.next_href_list)
+                    break
+
+                if cnt < self.check_list_size:
+                    cnt += 1
+                    self.next_href_list.append(href)
+
+                href_list.append(href)
+
+            browser.quit()
+
         return href_list
 
     def crawl_page_content(self, page_href_list: list):
@@ -90,7 +104,7 @@ class ProgrammersCrawler:
         json_data = []
 
         for i, href in enumerate(page_href_list):
-            browser = webdriver.Chrome()
+            browser = webdriver.Chrome(service=self.service,options=self.options)
             browser.get(href)
             title = browser.find_element(By.CLASS_NAME, "KWImVsDeFt2E93NXqAqt").find_element(By.TAG_NAME, "h2").text
 
