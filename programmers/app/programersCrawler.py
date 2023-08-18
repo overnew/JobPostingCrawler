@@ -31,6 +31,7 @@ class ProgrammersCrawler:
             'dynamodb',
             aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
             aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+            region_name='ap-northeast-2',
         )
         table_name = '001_crawler_metadata'  # 테이블 이름
         self.table = dynamodb.Table(table_name)
@@ -64,12 +65,14 @@ class ProgrammersCrawler:
         크롤링 대상 page list 만들기
         :return: 크롤링 대상 page list의 링크
         """
+        print("gogo")
         prefix_url = 'https://career.programmers.co.kr/job?page='
         page_idx = 0
         cnt = 0
         break_flag = True
 
         href_list = []
+        print("start crawling")
         while break_flag:
             page_idx += 1
             url = prefix_url + str(page_idx)
@@ -104,6 +107,7 @@ class ProgrammersCrawler:
         json_data = []
 
         for i, href in enumerate(page_href_list):
+            print(href)
             browser = webdriver.Chrome(service=self.service,options=self.options)
             browser.get(href)
             title = browser.find_element(By.CLASS_NAME, "KWImVsDeFt2E93NXqAqt").find_element(By.TAG_NAME, "h2").text
