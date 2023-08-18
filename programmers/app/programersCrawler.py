@@ -74,7 +74,7 @@ class ProgrammersCrawler:
             page_idx += 1
             url = prefix_url + str(page_idx)
 
-            browser = webdriver.Chrome()
+            browser = webdriver.Chrome(service=self.service,options=self.options)
             browser.get(url)
 
             titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
