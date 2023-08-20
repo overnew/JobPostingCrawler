@@ -14,7 +14,7 @@ def uploadCsvToCloud():
     basic_auth=("elastic", ELASTIC_PASSWORD)
   )
 
-  idx_name = "programmers"
+  idx_name = "programmers_final"
 
   with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
     helpers.bulk(client, f.readlines(), index=idx_name)  # , document = mapping)#,pipeline=pipeline_name)
