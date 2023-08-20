@@ -253,17 +253,18 @@ cols = [
     'work_condition',
     'task',
     'work_time',
-    'due'
+    'due',
+    'crawle_day'
     ]
 
 #print(cols)
 
-res = open('../../../../../PycharmProjects/crawling/new/crawl-worknet.log', 'w', encoding='utf-8')
+res = open('crawl-worknet.log', 'w', encoding='utf-8')
 
 # 페이지당 검색 개수 변경: 10, 30, 50
 params['resultCnt'] = 50
 params['resultCntInfo'] = 50
-
+crawle_day = time.strftime('%Y-%m-%d')
 data = template_empty(cols)
 
 for page in range(1, 20):# cnt // params['resultCnt'] + 1):
@@ -386,7 +387,8 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
             work_condition,
             task,
             work_time,
-            due
+            due,
+            crawle_day
         ])
 
         #print(temp.T)
@@ -399,7 +401,7 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
 
 #print(data.info())
 
-file_name = '../../../../../PycharmProjects/crawling/new/crawl_worknet1.csv'
+file_name = 'crawl_worknet1.csv'
 data.to_csv(file_name, encoding='utf-8', index=False)
 
 res.close()

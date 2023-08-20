@@ -1,11 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-import time
 import json
 import ndjson
 import boto3
 import os
+import re
+
+from datetime import datetime
+from datetime import date as dt
 
 
 class ProgrammersCrawler:
@@ -104,6 +106,16 @@ class ProgrammersCrawler:
 
     def crawl_page_content(self, page_href_list: list):
         #result = pd.DataFrame(index=range(0, 0), columns=['title', 'company', 'task', 'deadline', 'contract_type', 'career', 'location'])
+
+        content_name_dict = dict()
+        content_name_dict["경력"] = "career"
+        content_name_dict["고용 형태"] = "work_condition"
+        content_name_dict["근무 위치"] = "location"
+        content_name_dict["지원 마감"] = "due"
+        content_name_dict["연봉"] = "salary"
+        content_name_dict["직무"] = "task"
+
+
         json_data = []
 
         for i, href in enumerate(page_href_list):
@@ -116,8 +128,10 @@ class ProgrammersCrawler:
 
             body = browser.find_element(By.CLASS_NAME, "oSd94NeynGy8qiuPFFgg")
             contents = body.text.split('\n')
-
-            content_body = browser.find_element(By.CLASS_NAME, "yO7TZRtCO7sznD0Csuw_").text
+            try:
+                content_body = browser.find_elements(By.CLASS_NAME, "yO7TZRtCO7sznD0Csuw_")[1].text
+            except:
+                content_body = ""
 
             try:
                 stacks = browser.find_element(By.CLASS_NAME, "section-stacks")
@@ -130,10 +144,11 @@ class ProgrammersCrawler:
             idx = 0
             while len(contents) > idx:
                 try:
-                    content_list.append([contents[idx], contents[idx + 1]])
+                    content_list.append([content_name_dict[contents[idx]], contents[idx + 1]])
                 except:
                     break
                 idx = idx + 2
+
 
             data = [['title', title],
                     ['company', company],
@@ -147,7 +162,16 @@ class ProgrammersCrawler:
                     ]
 
             data.extend(content_list)
-            print(data)
+            #print(data)
+            to_dict = dict(data)
+
+            try:
+                string = to_dict['due'].replace(" ", "")
+                match = re.findall(r'\d{4}년\d{2}월\d{2}일', string)[0]
+                to_dict['due'] = datetime.strptime(match, '%Y년%m월%d일').date()
+            except:
+                to_dict['due'] = dt(2999, 12, 31)
+
             temp = json.dumps(dict(data), ensure_ascii=False)
             # json.dump(json.dumps(dict(data), ensure_ascii=False), f, ensure_ascii=False, indent=4)
             json_data.append(json.loads(temp))
@@ -155,7 +179,7 @@ class ProgrammersCrawler:
             browser.close()
             # if i > 1:
             #     break
-            time.sleep(1)  # 2초 간격 크롤링
+            #time.sleep(1)  # 2초 간격 크롤링
 
         with open('data.ndjson', 'w', encoding='UTF-8-sig') as f:
             ndjson.dump(json_data, f, ensure_ascii=False)
