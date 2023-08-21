@@ -115,11 +115,11 @@ class ProgrammersCrawler:
         content_name_dict["연봉"] = "salary"
         content_name_dict["직무"] = "task"
 
-
+        today = datetime.today()
         json_data = []
 
         for i, href in enumerate(page_href_list):
-            print(href)
+            #print(href)
             browser = webdriver.Chrome(options=self.options) #service=self.service,
             browser.get(href)
             title = browser.find_element(By.CLASS_NAME, "KWImVsDeFt2E93NXqAqt").find_element(By.TAG_NAME, "h2").text
@@ -152,11 +152,8 @@ class ProgrammersCrawler:
 
             data = [['title', title],
                     ['company', company],
-                    # ['task', contents[1]],
-                    # ['deadline', contents[3]],
-                    # ['contract_type', contents[5]],
-                    # ['career', contents[7]],
-                    # ['location', contents[9]],
+                    ['crawle_day', today]
+                    ['link', href]
                     ['stacks', stack_list],
                     ['body', content_body]
                     ]
