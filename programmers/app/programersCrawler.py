@@ -115,7 +115,7 @@ class ProgrammersCrawler:
         content_name_dict["연봉"] = "salary"
         content_name_dict["직무"] = "task"
 
-        today = datetime.datetime.now().strftime('%Y-%m-%d')
+        today = datetime.now().strftime('%Y-%m-%d')
         json_data = []
 
         for i, href in enumerate(page_href_list):
