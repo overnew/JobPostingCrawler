@@ -15,9 +15,10 @@ def uploadCsvToCloud():
   )
 
   idx_name = "programmers_final"
+  pipeline_name = "programmers_change_career_format"
 
   with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
-    helpers.bulk(client, f.readlines(), index=idx_name)  # , document = mapping)#,pipeline=pipeline_name)
+    helpers.bulk(client, f.readlines(), index=idx_name, pipeline=pipeline_name)
 
 #uploadCsvToCloud()
 
