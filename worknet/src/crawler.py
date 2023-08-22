@@ -267,7 +267,7 @@ params['resultCntInfo'] = 50
 crawle_day = time.strftime('%Y-%m-%d')
 data = template_empty(cols)
 
-for page in range(1, 10):# cnt // params['resultCnt'] + 1):
+for page in range(1, 20):# cnt // params['resultCnt'] + 1):
     params['currntPageNo'] = page
     params['pageIndex'] = page
     # url 생성
