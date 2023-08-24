@@ -169,7 +169,7 @@ class ProgrammersCrawler:
             except:
                 to_dict['due'] = dt(2999, 12, 31)
 
-            temp = json.dumps(dict(data), ensure_ascii=False)
+            temp = json.dumps(to_dict, ensure_ascii=False)
             # json.dump(json.dumps(dict(data), ensure_ascii=False), f, ensure_ascii=False, indent=4)
             json_data.append(json.loads(temp))
 

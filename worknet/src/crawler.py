@@ -112,15 +112,18 @@ def scrap_post(link: str) -> list:  # ['task', 'work_time', 'due']
 def proc_end_date(due_data:str):
     date = None
 
-    matches = re.findall(r'\d{4}년.\d{2}월.\d{2}일', due_data)
-    if len(matches) >= 2:
-        date1 = datetime.strptime(matches[0], '%Y년 %m월 %d일').date()
-        date2 = datetime.strptime(matches[1], '%Y년 %m월 %d일').date()
-        date = date2
+    try:
+        matches = re.findall(r'\d{4}년.\d{2}월.\d{2}일', due_data)
+        if len(matches) >= 2:
+            date1 = datetime.strptime(matches[0], '%Y년 %m월 %d일').date()
+            date2 = datetime.strptime(matches[1], '%Y년 %m월 %d일').date()
+            date = date2
 
-        if date1 > date2:
-            date = date1
-    elif len(matches) == 1:
+            if date1 > date2:
+                date = date1
+        else:
+            date = dt(2999, 12, 31)
+    except:
         date = dt(2999, 12, 31)
 
     return date
@@ -369,6 +372,9 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
             due = proc_end_date(this_post[2])
             if work_condition is None or len(str(work_condition)) < 1:
                 work_condition = this_post[3]
+
+        if due == "":
+            due = dt(2999, 12, 31)
 
         res.write(f'task: {task}\n')
         res.write(f'work time: {work_time}\n')

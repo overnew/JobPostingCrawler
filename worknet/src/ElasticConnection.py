@@ -14,7 +14,7 @@ def uploadCsvToCloud(file_name: str):
   )
 
 
-  idx_name = "worknet_final"
+  idx_name = "worknet_final_ver2"
   pipeline_name = "worknet_change_career_format"
 
   with open(file_name, 'rt', encoding='UTF8') as f:
