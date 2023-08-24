@@ -165,9 +165,9 @@ class ProgrammersCrawler:
             try:
                 string = to_dict['due'].replace(" ", "")
                 match = re.findall(r'\d{4}년\d{2}월\d{2}일', string)[0]
-                to_dict['due'] = datetime.strptime(match, '%Y년%m월%d일').date()
+                to_dict['due'] = datetime.strptime(match, '%Y년%m월%d일')
             except:
-                to_dict['due'] = dt(2999, 12, 31)
+                to_dict['due'] = dt(2999, 12, 31).strftime('%Y-%m-%d')
 
             temp = json.dumps(to_dict, ensure_ascii=False)
             # json.dump(json.dumps(dict(data), ensure_ascii=False), f, ensure_ascii=False, indent=4)
