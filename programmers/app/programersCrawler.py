@@ -60,6 +60,11 @@ class ProgrammersCrawler:
     
     def crawling_start(self):
         page_href_list = self.crawling_page_list()
+
+        if len(page_href_list) <= 0:
+            self.save_href_list()
+            return
+
         self.crawl_page_content(page_href_list)
 
     def crawling_page_list(self):
@@ -99,6 +104,9 @@ class ProgrammersCrawler:
                     self.next_href_list.append(href)
 
                 href_list.append(href)
+
+            if cnt < self.check_list_size:
+                self.next_href_list.extend(self.check_href_list)
 
             browser.quit()
 
