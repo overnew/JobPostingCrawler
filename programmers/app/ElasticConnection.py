@@ -14,7 +14,7 @@ def uploadCsvToCloud():
     basic_auth=("elastic", ELASTIC_PASSWORD)
   )
 
-  idx_name = "programmers_final_ver2"
+  idx_name = "p1t-programmers_final_ver2"
   pipeline_name = "programmers_change_career_format"
 
   with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
