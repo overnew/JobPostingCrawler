@@ -171,9 +171,10 @@ class ProgrammersCrawler:
             to_dict = dict(data)
 
             try:
-                string = to_dict['due'].replace(" ", "")
+                string = "20" + to_dict['due'].replace(" ", "")
                 match = re.findall(r'\d{4}년\d{2}월\d{2}일', string)[0]
-                to_dict['due'] = datetime.strptime(match, '%Y년%m월%d일')
+                date_temp = datetime.strptime(match, '%Y년%m월%d일')
+                to_dict['due'] = date_temp.strftime("%Y-%m-%d")
             except:
                 to_dict['due'] = dt(2999, 12, 31).strftime('%Y-%m-%d')
 
