@@ -15,11 +15,11 @@ def uploadCsvToCloud(file_name: str):
 
 
   idx_name = "p1t-worknet_final_ver2"
-  pipeline_name = "worknet_change_career_format"
+  #pipeline_name = "worknet_change_career_format"
 
   with open(file_name, 'rt', encoding='UTF8') as f:
     reader = csv.DictReader(f)
-    helpers.bulk(client, reader, index=idx_name, pipeline=pipeline_name)
+    helpers.bulk(client, reader, index=idx_name)#, pipeline=pipeline_name)
 
   print("cloud upload complete!")
 
