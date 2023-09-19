@@ -19,6 +19,6 @@ def uploadCsvToCloud():
 
   with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
     helpers.bulk(client, f.readlines(), index=idx_name, pipeline=pipeline_name)
-
+  print("upload complete!")
 #uploadCsvToCloud()
 

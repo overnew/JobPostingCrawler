@@ -117,10 +117,10 @@ def proc_end_date(due_data:str):
         if len(matches) >= 2:
             date1 = datetime.strptime(matches[0], '%Y년 %m월 %d일').date()
             date2 = datetime.strptime(matches[1], '%Y년 %m월 %d일').date()
-            date = date2
+            date = date2.strftime("%Y-%m-%d")
 
             if date1 > date2:
-                date = date1
+                date = date1.strftime("%Y-%m-%d")
         else:
             date = dt(2999, 12, 31)
     except:
