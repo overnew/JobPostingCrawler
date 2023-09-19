@@ -14,11 +14,12 @@ def uploadCsvToCloud():
     basic_auth=("elastic", ELASTIC_PASSWORD)
   )
 
-  idx_name = "p1t-programmers_final_ver2"
-  pipeline_name = "programmers_change_career_format"
+  #idx_name = "p1t-programmers_final_ver2"
+  idx_name = "programmers_crawle_test"
+  #pipeline_name = "programmers_change_career_format"
 
   with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
-    helpers.bulk(client, f.readlines(), index=idx_name, pipeline=pipeline_name)
+    helpers.bulk(client, f.readlines(), index=idx_name)#, pipeline=pipeline_name)
   print("upload complete!")
 #uploadCsvToCloud()
 
