@@ -112,6 +112,9 @@ def scrap_post(link: str) -> list:  # ['task', 'work_time', 'due']
 def proc_end_date(due_data:str):
     date = None
 
+    #형태는 아래와 같음
+    #접수시작일 : 2023년 08월 05일 접수마감일 : 2023년 08월 15일 접수마감유형 : 마감일까지
+
     try:
         matches = re.findall(r'\d{4}년.\d{2}월.\d{2}일', due_data)
         if len(matches) >= 2:
@@ -267,7 +270,7 @@ res = open('crawl-worknet.log', 'w', encoding='utf-8')
 # 페이지당 검색 개수 변경: 10, 30, 50
 params['resultCnt'] = 50
 params['resultCntInfo'] = 50
-crawle_day = time.strftime('%Y-%m-%d')
+crawle_day = datetime.now().strftime('%Y-%m-%d')
 data = template_empty(cols)
 
 for page in range(1, 20):# cnt // params['resultCnt'] + 1):

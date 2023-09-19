@@ -178,6 +178,13 @@ class ProgrammersCrawler:
             except:
                 to_dict['due'] = dt(2999, 12, 31).strftime('%Y-%m-%d')
 
+            #경력 제한 후처리
+            career_parse_list = self.__parse_career(to_dict['career'])
+
+            if len(career_parse_list) == 2:
+                to_dict['career_start'] = career_parse_list[0]
+                to_dict['career_end'] = career_parse_list[1]
+
             temp = json.dumps(to_dict, ensure_ascii=False)
             # json.dump(json.dumps(dict(data), ensure_ascii=False), f, ensure_ascii=False, indent=4)
             json_data.append(json.loads(temp))
@@ -191,6 +198,24 @@ class ProgrammersCrawler:
             ndjson.dump(json_data, f, ensure_ascii=False)
 
         self.save_href_list()
+
+    def __parse_career(self, career_str: str):
+        career_parse_list = []
+
+        if '~' in career_str:
+            try:
+                career_temp_list = career_str.split('~')
+                career_start = re.sub(r'[^0-9]', '', career_temp_list[0])
+                career_parse_list.append(int(career_start))
+
+                career_end = re.sub(r'[^0-9]', '', career_temp_list[1])
+                career_parse_list.append(int(career_end))
+            except:
+                career_parse_list = []
+
+        return career_parse_list
+
+
 
 
 #ProgrammersCrawler().crawling_start()
