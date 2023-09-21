@@ -15,7 +15,7 @@ def write_data_info(file_route: str, log_route: str) -> None:
     res = open(log_route, 'w', encoding='utf-8')
 
     data = pd.read_csv(file_route, header=0, encoding='utf-8')
-    #print(data.info())
+    # print(data.info())
     res.write(f'-----\n각 column별 NaN 값 개수\n-----\n')
     res.write(f'{data.isnull().sum()}\n\n')
 
@@ -75,9 +75,10 @@ def scrap_post(link: str) -> list:  # ['task', 'work_time', 'due']
         task = 'no_content'
 
     # 근무 시간
-    work_time_selector = ['#contents > section > div > div.careers-area > div.careers-new > div.border > div.left > div:nth-child(3) > div:nth-child(1) > div > ul > li:nth-child(2) > span',
-                          '#contents > div.careers-area > div:nth-child(12) > table > tbody > tr > td:nth-child(2)',
-                          '#contents > div.careers-area > div.careers-table.v1.center.mt20 > table > tbody > tr > td:nth-child(2)']
+    work_time_selector = [
+        '#contents > section > div > div.careers-area > div.careers-new > div.border > div.left > div:nth-child(3) > div:nth-child(1) > div > ul > li:nth-child(2) > span',
+        '#contents > div.careers-area > div:nth-child(12) > table > tbody > tr > td:nth-child(2)',
+        '#contents > div.careers-area > div.careers-table.v1.center.mt20 > table > tbody > tr > td:nth-child(2)']
     work_time = ''
     for selector in work_time_selector:
         work_time = safe_text(post.select_one(selector))
@@ -87,9 +88,10 @@ def scrap_post(link: str) -> list:  # ['task', 'work_time', 'due']
         work_time = 'no_content'
 
     # 마감일
-    due_selector = ['#contents > section > div > div.careers-area > div:nth-child(11) > table > tbody > tr > td:nth-child(1)',
-                    '#contents > div.careers-area > div:nth-child(7) > table > tbody > tr > td:nth-child(1)',
-                    '#contents > div.careers-area > div:nth-child(6) > table > tbody > tr > td:nth-child(1)']
+    due_selector = [
+        '#contents > section > div > div.careers-area > div:nth-child(11) > table > tbody > tr > td:nth-child(1)',
+        '#contents > div.careers-area > div:nth-child(7) > table > tbody > tr > td:nth-child(1)',
+        '#contents > div.careers-area > div:nth-child(6) > table > tbody > tr > td:nth-child(1)']
     due = ''
     for selector in due_selector:
         due = safe_text(post.select_one(selector))
@@ -109,11 +111,11 @@ def scrap_post(link: str) -> list:  # ['task', 'work_time', 'due']
     return [task, work_time, due, work_condition]
 
 
-def proc_end_date(due_data:str):
+def proc_end_date(due_data: str):
     date = None
 
-    #형태는 아래와 같음
-    #접수시작일 : 2023년 08월 05일 접수마감일 : 2023년 08월 15일 접수마감유형 : 마감일까지
+    # 형태는 아래와 같음
+    # 접수시작일 : 2023년 08월 05일 접수마감일 : 2023년 08월 15일 접수마감유형 : 마감일까지
 
     try:
         matches = re.findall(r'\d{4}년.\d{2}월.\d{2}일', due_data)
@@ -125,11 +127,15 @@ def proc_end_date(due_data:str):
             if date1 > date2:
                 date = date1.strftime("%Y-%m-%d")
         else:
-            date = dt(2999, 12, 31)
+            date = dt(2999, 12, 31).strftime("%Y-%m-%d")
     except:
-        date = dt(2999, 12, 31)
+        date = dt(2999, 12, 31).strftime("%Y-%m-%d")
 
     return date
+
+
+def has_numbers(input_string: str):
+    return any(char.isdigit() for char in input_string)
 
 
 base_url = 'https://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrchList.do?'
@@ -221,15 +227,17 @@ params = {
     'termContractMmcnt': '',
     'careerFrom': '',
     'laborHrShortYn': '#viewSPL'
-    }
+}
 
-params['regDateStdt'] = time.strftime('%Y%m%d')
-params['regDateEndt'] = time.strftime('%Y%m%d')
-#print(time.strftime('%Y%m%d'))
+fix_day = time.strftime('%Y%m%d')
+fix_crawl_day = time.strftime('%Y-%m-%d')
+params['regDateStdt'] = fix_day  # datetime.now().strftime('%Y%m%d')
+params['regDateEndt'] = fix_day  # datetime.now().strftime('%Y%m%d')
+# print(time.strftime('%Y%m%d'))
 
 # 검색 조건에 따른 결과 개수 확인
-params['resultCnt'] = 10
-params['resultCntInfo'] = 10
+params['resultCnt'] = 50
+params['resultCntInfo'] = 50
 
 # url 생성
 url = make_url(base_url, params)
@@ -241,8 +249,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 cnt = safe_text(soup.select_one(f'#mForm > div.board-list-count.mt50 > p > strong')).replace(',', '')
 if cnt is not None:
     cnt = int(cnt)
-#print(cnt)
-
+# print(cnt)
 
 
 # 저장할 리스트 생성
@@ -252,6 +259,7 @@ cols = [
     'title',
     'link',
     'career',
+    'career_start',
     'education',
     'location',
     'salary_type',
@@ -261,19 +269,19 @@ cols = [
     'work_time',
     'due',
     'crawle_day'
-    ]
+]
 
-#print(cols)
+# print(cols)
 
 res = open('crawl-worknet.log', 'w', encoding='utf-8')
 
 # 페이지당 검색 개수 변경: 10, 30, 50
 params['resultCnt'] = 50
 params['resultCntInfo'] = 50
-crawle_day = datetime.now().strftime('%Y-%m-%d')
+crawle_day = fix_crawl_day  # datetime.now().strftime('%Y-%m-%d')
 data = template_empty(cols)
 
-for page in range(1, 20):# cnt // params['resultCnt'] + 1):
+for page in range(1, 25):  # cnt // params['resultCnt'] + 1):
     params['currntPageNo'] = page
     params['pageIndex'] = page
     # url 생성
@@ -289,7 +297,7 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
 
     for row in range(1, params['resultCnt'] + 1):
         res.write(f'page {page}, row {row}\n')
-        #print(f'page {page}, row {row}')
+        # print(f'page {page}, row {row}')
 
         # 회사명
         company_selector = selector_base + f'tr#list{row} > td:nth-child(2) > a.cp_name'
@@ -311,12 +319,17 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
         except:
             link = None
         res.write(f'link: {link}\n')
-        #print(f'link: {link}')
+        # print(f'link: {link}')
 
         # 경력
         career_selector = selector_base + f'tr#list{row} > td:nth-child(3) > div > p:nth-child(3) > em:nth-child(1)'
         career = safe_text(soup.select_one(career_selector))
         res.write(f'career: {career}\n')
+
+        # 경력 시작 후처리
+        career_start = int(0)
+        if has_numbers(career):
+            career_start = int(re.sub(r'[^0-9]', '', career))
 
         # 학력
         education_selector = selector_base + f'tr#list{row} > td:nth-child(3) > div > p:nth-child(3) > em:nth-child(2)'
@@ -335,7 +348,11 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
 
         # 급여 금액
         salary_selector = selector_base + f'tr#list{row} > td:nth-child(4) > div > p:nth-child(1)'
-        salary = safe_text(soup.select_one(salary_selector)).replace(salary_type, "").strip()
+        try:
+            salary = safe_text(soup.select_one(salary_selector)).replace(salary_type, "").strip()
+        except:
+            salary = "회사내규에 따름"
+
         if salary_type == '회사내규에 따름':
             salary = "회사내규에 따름"
         #     salary = -1
@@ -389,6 +406,7 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
             title,
             link,
             career,
+            career_start,
             education,
             location,
             salary_type,
@@ -400,7 +418,7 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
             crawle_day
         ])
 
-        #print(temp.T)
+        # print(temp.T)
         buffer = pd.concat([buffer, temp], ignore_index=True)
 
         res.write('-----\n')
@@ -408,7 +426,7 @@ for page in range(1, 20):# cnt // params['resultCnt'] + 1):
     data = pd.concat([data, buffer], ignore_index=True)
 # end of for i in range(1, cnt // params['resultCnt'] + 1):
 
-#print(data.info())
+# print(data.info())
 
 file_name = 'crawl_worknet1.csv'
 data.to_csv(file_name, encoding='utf-8', index=False)
