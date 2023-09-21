@@ -328,7 +328,7 @@ for page in range(1, 25):  # cnt // params['resultCnt'] + 1):
 
         # 경력 시작 후처리
         career_start = int(0)
-        if has_numbers(career):
+        if career is not None and has_numbers(career):
             career_start = int(re.sub(r'[^0-9]', '', career))
 
         # 학력
