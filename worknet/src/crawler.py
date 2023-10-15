@@ -9,6 +9,7 @@ from datetime import datetime
 from datetime import date as dt
 
 from ElasticConnection import uploadCsvToCloud
+from SlackNotifiaction import SnsWrapper
 
 
 def write_data_info(file_route: str, log_route: str) -> None:
@@ -434,3 +435,5 @@ data.to_csv(file_name, encoding='utf-8', index=False)
 res.close()
 
 uploadCsvToCloud(file_name)
+
+SnsWrapper.publish_crawling_message("워크넷 크롤링 완료!")
