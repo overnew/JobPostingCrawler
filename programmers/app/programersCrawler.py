@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import json
 import ndjson
@@ -23,6 +24,7 @@ class ProgrammersCrawler:
     def __init__(self):
         #for selenium
         #self.service = Service(executable_path='./usr/src/chrome/chromedriver.exe')
+        self.service = Service()
         self.options = webdriver.ChromeOptions()
         #self.options.add_argument('--headless')
         # options.add_argument('window-size=1200x600')
@@ -84,7 +86,7 @@ class ProgrammersCrawler:
             page_idx += 1
             url = prefix_url + str(page_idx)
 
-            browser = webdriver.Chrome(options=self.options)
+            browser = webdriver.Chrome(service=self.service, options=self.options)
             browser.get(url)
 
             titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
