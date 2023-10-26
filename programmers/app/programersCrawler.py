@@ -6,6 +6,7 @@ import ndjson
 import boto3
 import os
 import re
+import time
 
 from datetime import datetime
 from datetime import date as dt
@@ -111,6 +112,8 @@ class ProgrammersCrawler:
                 self.next_href_list.extend(self.check_href_list)
 
             browser.quit()
+            print(str(page_idx) + " crawling done")
+            time.sleep(2)   #2초 대기 후 실행
 
         return href_list
 
