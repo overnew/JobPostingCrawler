@@ -63,14 +63,12 @@ class ProgrammersCrawler:
     
     def crawling_start(self):
         page_href_list = self.crawling_page_list()
-        print(page_href_list)
 
-        '''
         if len(page_href_list) <= 0:
             self.save_href_list()
             return
 
-        self.crawl_page_content(page_href_list) '''
+        self.crawl_page_content(page_href_list)
 
     def crawling_page_list(self):
         """
@@ -94,8 +92,6 @@ class ProgrammersCrawler:
             browser.get(url)
 
             titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
-            print(titles)
-            return "done"
 
             for i, tit in enumerate(titles):
 
