@@ -194,7 +194,10 @@ class ProgrammersCrawler:
                 to_dict['due'] = dt(2999, 12, 31).strftime('%Y-%m-%d')
 
             #경력 제한 후처리
-            career_parse_list = self.__parse_career(to_dict['career'])
+            try:
+                career_parse_list = self.__parse_career(to_dict['career'])
+            except:
+                career_parse_list = [0, 50] #경력 무관
 
             if len(career_parse_list) == 2:
                 to_dict['career_start'] = career_parse_list[0]
@@ -226,7 +229,7 @@ class ProgrammersCrawler:
                 career_end = re.sub(r'[^0-9]', '', career_temp_list[1])
                 career_parse_list.append(int(career_end))
             except:
-                career_parse_list = []
+                career_parse_list = [0, 50]
 
         return career_parse_list
 
