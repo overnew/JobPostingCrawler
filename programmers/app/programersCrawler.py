@@ -88,16 +88,17 @@ class ProgrammersCrawler:
             url = prefix_url + str(page_idx)
 
             browser = webdriver.Chrome(options=self.options)
-            browser.implicitly_wait(4)
+            browser.implicitly_wait(2)
             browser.get(url)
 
             titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
 
             for i, tit in enumerate(titles):
+                tit = browser.find_elements(By.CLASS_NAME, "list-position-item")[i]
 
-                body = tit.find_element(By.TAG_NAME, "a")  # 태그로 가져오기
+                tit.find_element(By.TAG_NAME, "a").click()
                 # print(body.get_attribute("href"))
-                href = body.get_attribute("href")
+                href = browser.current_url
                 if href in self.check_href_list:
                     break_flag = False
                     print(self.next_href_list)
@@ -108,6 +109,9 @@ class ProgrammersCrawler:
                     self.next_href_list.append(href)
 
                 href_list.append(href)
+
+                browser.back()
+                time.sleep(1)
 
             if cnt < self.check_list_size:
                 self.next_href_list.extend(self.check_href_list)
