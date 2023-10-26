@@ -95,8 +95,11 @@ class ProgrammersCrawler:
 
             for i, t in enumerate(titles):
                 tit = browser.find_elements(By.CLASS_NAME, "list-position-item")[i]
-
-                tit.find_element(By.TAG_NAME, "a").click()
+                try:
+                    tit.find_element(By.TAG_NAME, "a").click()
+                except:
+                    print("click pass")
+                    continue
                 # print(body.get_attribute("href"))
                 href = browser.current_url
                 browser.back()
@@ -140,6 +143,7 @@ class ProgrammersCrawler:
         for i, href in enumerate(page_href_list):
             #print(href)
             browser = webdriver.Chrome(options=self.options) #service=self.service,
+            browser.implicitly_wait(2)
             browser.get(href)
             title = browser.find_element(By.CLASS_NAME, "KWImVsDeFt2E93NXqAqt").find_element(By.TAG_NAME, "h2").text
 
