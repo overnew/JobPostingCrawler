@@ -63,12 +63,14 @@ class ProgrammersCrawler:
     
     def crawling_start(self):
         page_href_list = self.crawling_page_list()
+        print(page_href_list)
 
+        '''
         if len(page_href_list) <= 0:
             self.save_href_list()
             return
 
-        self.crawl_page_content(page_href_list)
+        self.crawl_page_content(page_href_list) '''
 
     def crawling_page_list(self):
         """
@@ -88,9 +90,12 @@ class ProgrammersCrawler:
             url = prefix_url + str(page_idx)
 
             browser = webdriver.Chrome(options=self.options)
+            browser.implicitly_wait(4)
             browser.get(url)
 
             titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
+            print(titles)
+            return "done"
 
             for i, tit in enumerate(titles):
 
@@ -113,7 +118,7 @@ class ProgrammersCrawler:
 
             browser.quit()
             print(str(page_idx) + " crawling done")
-            time.sleep(2)   #2초 대기 후 실행
+            time.sleep(1)   #2초 대기 후 실행
 
         return href_list
 
