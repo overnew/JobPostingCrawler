@@ -96,33 +96,37 @@ class ProgrammersCrawler:
             print("list len : ")
             print(len(titles))
 
-            for i, t in enumerate(titles):
-                tit = browser.find_elements(By.CLASS_NAME, "list-position-item")[i]
+            for i in range(len(titles)):
                 try:
-                    tit.find_element(By.TAG_NAME, "a").click()
+                    tit = browser.find_elements(By.CLASS_NAME, "list-position-item")[i]
+                    try:
+                        tit.find_element(By.TAG_NAME, "a").click()
+                    except:
+                        print("click pass")
+                        continue
+                    # print(body.get_attribute("href"))
+                    href = browser.current_url
+                    browser.back()
+
+                    if not ("job_positions" in href):
+                        continue
+
+                    if href in self.check_href_list:
+                        break_flag = False
+                        print(self.next_href_list)
+                        break
+
+                    if cnt < self.check_list_size:
+                        cnt += 1
+                        self.next_href_list.append(href)
+
+                    href_list.append(href)
+                    print("get " + href)
+
+                    time.sleep(1)
                 except:
-                    print("click pass")
-                    continue
-                # print(body.get_attribute("href"))
-                href = browser.current_url
-                browser.back()
-
-                if not ("job_positions" in href):
-                    continue
-
-                if href in self.check_href_list:
-                    break_flag = False
-                    print(self.next_href_list)
+                    print("range out OR Something occur")
                     break
-
-                if cnt < self.check_list_size:
-                    cnt += 1
-                    self.next_href_list.append(href)
-
-                href_list.append(href)
-                print("get " + href)
-
-                time.sleep(1)
 
             if cnt < self.check_list_size:
                 self.next_href_list.extend(self.check_href_list)
