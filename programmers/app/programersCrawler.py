@@ -93,6 +93,9 @@ class ProgrammersCrawler:
 
             titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
 
+            print("list len : ")
+            print(len(titles))
+
             for i, t in enumerate(titles):
                 tit = browser.find_elements(By.CLASS_NAME, "list-position-item")[i]
                 try:
@@ -103,6 +106,10 @@ class ProgrammersCrawler:
                 # print(body.get_attribute("href"))
                 href = browser.current_url
                 browser.back()
+
+                if not ("job_positions" in href):
+                    continue
+
                 if href in self.check_href_list:
                     break_flag = False
                     print(self.next_href_list)
