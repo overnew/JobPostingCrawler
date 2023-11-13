@@ -247,9 +247,12 @@ url = make_url(base_url, params)
 response = requests.get(url)
 soup = BeautifulSoup(response.content, 'html.parser')
 
-cnt = safe_text(soup.select_one(f'#mForm > div.board-list-count.mt50 > p > strong')).replace(',', '')
-if cnt is not None:
-    cnt = int(cnt)
+try:
+    cnt = safe_text(soup.select_one(f'#mForm > div.board-list-count.mt50 > p > strong')).replace(',', '')
+    if cnt is not None:
+        cnt = int(cnt)
+except:
+     print("Count can't be calc")
 # print(cnt)
 
 
