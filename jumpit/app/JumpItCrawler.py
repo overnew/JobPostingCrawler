@@ -15,6 +15,11 @@ import ndjson
 class JumpItCrawler:
 
     def __init__(self):
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument('--headless')
+        self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--disable-dev-shm-usage')
+
         self.db_connector = DynamoDBConnector()
         self.crawled_list = self.db_connector.get_check_list()
         self.next_check_list = []
@@ -51,7 +56,7 @@ class JumpItCrawler:
         crawling_target_list = []
 
         url = "https://www.jumpit.co.kr/positions?sort=reg_dt"
-        browser = webdriver.Chrome()  # options=self.options)
+        browser = webdriver.Chrome(options=self.options)
         browser.get(url)
 
         actions = browser.find_element(By.CSS_SELECTOR, 'body')
@@ -85,7 +90,7 @@ class JumpItCrawler:
             self.__get_detail_by_page(href)
 
     def __get_detail_by_page(self, href: str):
-        browser = webdriver.Chrome()  # options=self.options)
+        browser = webdriver.Chrome(options=self.options)
         browser.get(href)
         time.sleep(1)
 
@@ -166,7 +171,3 @@ class JumpItCrawler:
 
         return career_parse_list
 
-
-#wanted = WantedCrawler()
-#wanted.crawl_start()
-#wanted.get_detail_by_page("https://www.jumpit.co.kr/position/21116")
