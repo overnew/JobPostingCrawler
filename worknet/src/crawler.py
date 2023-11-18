@@ -435,7 +435,6 @@ for page in range(1, 25):  # cnt // params['resultCnt'] + 1):
 try:
     file_name = 'crawl_worknet1.csv'
     data.to_csv(file_name, encoding='utf-8', index=False)
-
     res.close()
 
     uploadCsvToCloud(file_name)
