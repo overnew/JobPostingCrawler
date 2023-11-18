@@ -1,10 +1,10 @@
-name: Build and Push Docker Image
+name: worknet Crawler Build and Push Docker Image
 on:
   push:
     branches:
       - main
     paths:
-      - 'worknet'
+      - 'worknet/**'
 
 jobs:
   build-worknet-image:

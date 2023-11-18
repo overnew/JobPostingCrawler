@@ -1,10 +1,10 @@
-name: Build and Push Docker Image
+name: programmers Crawler Build and Push Docker Image
 on:
   push:
     branches:
       - main
     paths:
-      - 'programmers'
+      - 'programmers/**'
 
 jobs:
   build-programmers-image:
