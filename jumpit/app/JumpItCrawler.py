@@ -33,7 +33,7 @@ class JumpItCrawler:
         if len(crawling_target_list) <= 0:
             return
 
-        print(str(len(crawling_target_list)))
+        print("get " + str(len(crawling_target_list)))
         print(crawling_target_list)
 
         self.__crawl_list(crawling_target_list)
@@ -64,6 +64,7 @@ class JumpItCrawler:
         break_flag = False
         start_idx = 0
 
+        print("start crawling")
         while not break_flag:
             postings = browser.find_elements(By.XPATH, "/html/body/main/div/div[1]/section/div")
 
