@@ -432,11 +432,12 @@ for page in range(1, 25):  # cnt // params['resultCnt'] + 1):
 
 # print(data.info())
 
-file_name = 'crawl_worknet1.csv'
-data.to_csv(file_name, encoding='utf-8', index=False)
+try:
+    file_name = 'crawl_worknet1.csv'
+    data.to_csv(file_name, encoding='utf-8', index=False)
 
-res.close()
+    res.close()
 
-uploadCsvToCloud(file_name)
-
-SnsWrapper.publish_crawling_message("워크넷 크롤링 완료!")
+    uploadCsvToCloud(file_name)
+except:
+    SnsWrapper.publish_crawling_message("워크넷 크롤링 에러!")
