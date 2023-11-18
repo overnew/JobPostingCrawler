@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - worknet
+      - 'worknet'
 
 jobs:
   build-worknet-image:
