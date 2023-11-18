@@ -1,0 +1,40 @@
+name: jumpit Crawler Build and Push Docker Image
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'jumpit/**'
+
+jobs:
+  build-jumpit-crawling-image:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./jumpit
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - run: docker build --tag 001_jumpit_images:v1 ./jumpit
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
+          ELASTIC_CLOUD_PASSWORD: ${{ secrets.ELASTIC_CLOUD_PASSWORD }}
+
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: send to ECR
+        env:
+          working-directory: ./jumpit
+        run: |
+          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com 
+          docker tag 001_jumpit_images:v1 ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_jumpit_crawling_images:latest 
+          docker push ${{ secrets.AWS_ECR_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/001_jumpit_crawling_images:latest
