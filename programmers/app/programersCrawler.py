@@ -125,6 +125,8 @@ class ProgrammersCrawler:
 
                     time.sleep(1)
                 except:
+                    print(len(href_list))
+                    print(href_list)
                     print("range out OR Something occur")
                     break
 
