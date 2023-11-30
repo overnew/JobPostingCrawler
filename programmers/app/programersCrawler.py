@@ -88,54 +88,70 @@ class ProgrammersCrawler:
             url = prefix_url + str(page_idx)
 
             browser = webdriver.Chrome(options=self.options)
-            browser.implicitly_wait(2)
             browser.get(url)
+            browser.implicitly_wait(2)
 
-            titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
+            #기존 tab 저장
+            origin = browser.current_window_handle
 
-            print("list len : ")
-            print(len(titles))
+            # titles = browser.find_elements(By.CLASS_NAME, "list-position-item")  # class로 가져오기
+            #
+            # print("list len : ")
+            # print(len(titles))
 
-            for i in range(len(titles)):
+            for i in range(3, 23):
                 try:
-                    tit = browser.find_elements(By.CLASS_NAME, "list-position-item")[i]
-                    try:
-                        tit.find_element(By.TAG_NAME, "a").click()
-                    except:
-                        print("click pass")
-                        continue
-                    # print(body.get_attribute("href"))
-                    href = browser.current_url
-                    browser.back()
+                    target = '/html/body/div[2]/div/section[2]/div/ul/li[' + str(i) + ']/div[2]/div[1]/h5/a'
 
-                    if not ("job_positions" in href):
-                        continue
-
-                    if href in self.check_href_list:
-                        break_flag = False
-                        print(self.next_href_list)
-                        break
-
-                    if cnt < self.check_list_size:
-                        cnt += 1
-                        self.next_href_list.append(href)
-
-                    href_list.append(href)
-                    print("get " + href)
-
-                    time.sleep(1)
+                    time.sleep(3)
+                    browser.find_element(By.XPATH, target).click()
                 except:
-                    print(len(href_list))
-                    print(href_list)
-                    print("range out OR Something occur")
+                    print("click pass")
+                    continue
+
+                time.sleep(2)
+                p = browser.current_window_handle
+
+                # get first child window
+                chwd = browser.window_handles
+
+                for w in chwd:
+                    # switch focus to child window
+                    if (w != p):
+                        browser.switch_to.window(w)
+
+                time.sleep(3)
+                href = browser.current_url
+
+                # tab닫기
+                browser.close()
+
+                # tab 이동
+                browser.switch_to.window(origin)
+
+                if not ("job_positions" in href):
+                    continue
+
+                if href in self.check_href_list:
+                    break_flag = False
+                    print(self.next_href_list)
                     break
+
+                if cnt < self.check_list_size:
+                    cnt += 1
+                    self.next_href_list.append(href)
+
+                href_list.append(href)
+                print("get " + href)
+
+                time.sleep(1)
 
             if cnt < self.check_list_size:
                 self.next_href_list.extend(self.check_href_list)
 
             browser.quit()
             print(str(page_idx) + " crawling done")
-            time.sleep(1)   #2초 대기 후 실행
+            time.sleep(1)  # 2초 대기 후 실행
 
         return href_list
 
