@@ -136,7 +136,8 @@ class JumpItCrawler:
                 ['location', location],
                 ['salary', salary],
                 ['due', due],
-                ['stacks', stack_list]]
+                ['stacks', stack_list],
+                ['career', career]]
 
         to_dict = dict(data)
 
