@@ -16,10 +16,15 @@ def uploadCsvToCloud():
 
   #idx_name = "p1t-programmers_final_ver2"
   idx_name = "programmers_crawle_test"
-  #pipeline_name = "programmers_change_career_format"
+  union_idx_name = "job_post_union_ver1"
+  pipeline_name = "TATTOO_index_integrate_programmers"
 
   with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
-    helpers.bulk(client, f.readlines(), index=idx_name)#, pipeline=pipeline_name)
+    helpers.bulk(client, f.readlines(), index=idx_name)
+
+    #통합 인덱스에 업로드
+    helpers.bulk(client, f.readlines(), index=union_idx_name, pipeline=pipeline_name)
   print("upload complete!")
+
 #uploadCsvToCloud()
 
