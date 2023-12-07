@@ -151,7 +151,7 @@ class JumpItCrawler:
             to_dict['career_start'] = career_parse_list[0]
             to_dict['career_end'] = career_parse_list[1]
 
-        print(to_dict)
+        #print(to_dict)
         temp = json.dumps(to_dict, ensure_ascii=False)
         self.json_data.append(json.loads(temp))
         browser.close()
