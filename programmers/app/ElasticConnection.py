@@ -22,9 +22,12 @@ def uploadCsvToCloud():
   with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
     helpers.bulk(client, f.readlines(), index=idx_name)
 
-    #통합 인덱스에 업로드
-    helpers.bulk(client, f.readlines(), index=union_idx_name, pipeline=pipeline_name)
   print("upload complete!")
+
+    #통합 인덱스에 업로드
+  with open('data.ndjson', 'rt', encoding='UTF-8-sig') as f:
+    helpers.bulk(client, f.readlines(), index=union_idx_name, pipeline=pipeline_name)
+  print("union upload complete!")
 
 #uploadCsvToCloud()
 

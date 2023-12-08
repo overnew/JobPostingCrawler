@@ -23,8 +23,12 @@ def uploadCsvToCloud(file_name: str):
         reader = csv.DictReader(f)
         helpers.bulk(client, reader, index=idx_name)
 
-        # #통합 인덱스에 업로드
-        helpers.bulk(client, f.readlines(), index=union_idx_name, pipeline=pipeline_name)
-
-
     print("cloud upload complete!")
+
+        # #통합 인덱스에 업로드
+    with open(file_name, 'rt', encoding='UTF8') as f:
+        reader = csv.DictReader(f)
+        helpers.bulk(client, reader, index=union_idx_name, pipeline=pipeline_name)
+
+    print("union cloud upload complete!")
+
