@@ -99,23 +99,23 @@ class JumpItCrawler:
         time.sleep(1)
 
         # 크롤링 내용
-        title = browser.find_element(By.XPATH, "/html/body/main/div/div[2]/div/section[1]/h1").text
+        title = browser.find_element(By.XPATH, "/html/body/main/div/div[1]/div/section[1]/h1").text
 
-        company = browser.find_element(By.XPATH, "/html/body/main/div/div[2]/div/section[1]/div/a").text
+        company = browser.find_element(By.XPATH, "/html/body/main/div/div[1]/div/section[1]/div/a").text
 
-        post_body = browser.find_element(By.XPATH, "/html/body/main/div/div[2]/div/section[2]").text
-        career = browser.find_element(By.XPATH, "/html/body/main/div/div[2]/div/section[3]/dl[1]/dd").text
+        post_body = browser.find_element(By.XPATH, "/html/body/main/div/div[1]/div/section[2]").text
+        career = browser.find_element(By.XPATH, "/html/body/main/div/div[1]/div/section[3]/dl[1]/dd").text
 
         location = browser.find_element(By.XPATH,
-                                        "/html/body/main/div/div[2]/div/section[3]/dl[4]/dd/ul/li").text
+                                        "/html/body/main/div/div[1]/div/section[3]/dl[4]/dd/ul/li").text
         location = location.replace("\n지도보기·주소복사", "")
 
-        due = browser.find_element(By.XPATH, "/html/body/main/div/div[2]/div/section[3]/dl[3]/dd").text
+        due = browser.find_element(By.XPATH, "/html/body/main/div/div[1]/div/section[3]/dl[3]/dd").text
         salary = "추후 협의"
         crawle_day = datetime.now().strftime('%Y-%m-%d')
 
         # 요구 기술 스택
-        stacks = browser.find_elements(By.XPATH,"/html/body/main/div/div[2]/div/section[2]/dl[1]/dd/pre/div")
+        stacks = browser.find_elements(By.XPATH,"/html/body/main/div/div[1]/div/section[2]/dl[1]/dd/pre/div")
 
         stack_list = []
         try:
@@ -155,7 +155,7 @@ class JumpItCrawler:
             to_dict['career_start'] = career_parse_list[0]
             to_dict['career_end'] = career_parse_list[1]
 
-        #print(to_dict)
+        print(to_dict)
         temp = json.dumps(to_dict, ensure_ascii=False)
         self.json_data.append(json.loads(temp))
         browser.close()
