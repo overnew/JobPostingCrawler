@@ -1,5 +1,13 @@
 # JobPostingCrawler
 
+
+<br>
+
+<img width="50%" src= "https://github.com/overnew/JobPostingSearchingBot/assets/43613584/7a4372d4-96c1-48c1-abcc-d2ccda857d28">
+
+<br><br><br>
+
+
 <strong>취업 공고 사이트에서 크롤링한 데이터를 Elastic Cloud로 전송하는 코드 입니다.</strong>
  - 크롤링 코드는 Github Actions를 통해서, 도커로 빌드 되고 AWS ECR에 전송됩니다.
 
@@ -23,7 +31,7 @@
 ## 서비스 전체 아키텍처
 <br><br>
 
-<img width="80%" src="https://github.com/overnew/JobPostingCrawler/assets/43613584/cd8fc9a4-1ff4-44c9-ab92-99d5d4e8ccba"/>
+<img width="80%" src="https://github.com/overnew/JobPostingSearchingBot/assets/43613584/123857c7-d58d-43de-af2a-823e065b0a46"/>
 
 <br><br>
 
