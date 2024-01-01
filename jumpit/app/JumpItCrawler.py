@@ -88,7 +88,10 @@ class JumpItCrawler:
 
     def __crawl_list(self, crawling_target_list: list):
         for i, href in enumerate(crawling_target_list):
-            self.__get_detail_by_page(href)
+            try:
+                self.__get_detail_by_page(href)
+            except:
+                print("pass")
 
     def __get_detail_by_page(self, href: str):
         browser = webdriver.Chrome(options=self.options)
